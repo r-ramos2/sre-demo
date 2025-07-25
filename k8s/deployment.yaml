@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sre-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sre-demo
+  template:
+    metadata:
+      labels:
+        app: sre-demo
+    spec:
+      containers:
+      - name: sre-demo
+        image: sre-demo:v1
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 5

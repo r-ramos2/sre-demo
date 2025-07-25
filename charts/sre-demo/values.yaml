@@ -1,0 +1,10 @@
+replicaCount: 2
+image:
+ repository: sre-demo
+ pullPolicy: Never
+ tag: latest
+service:
+ type: ClusterIP
+ port: 80
+ targetPort: 8080
+ metricsPort: 9090

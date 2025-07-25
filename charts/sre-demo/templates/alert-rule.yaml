@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+ name: sre-demo-alerts
+ labels:
+  release: monitoring
+spec:
+ groups:
+ - name: sre-demo.rules
+   rules:
+   - alert: HighErrorRate
+     expr: rate(app_requests_total[5m]) < 0.9
+     for: 2m
+     labels:
+      severity: page
+     annotations:
+      summary: "Service success rate < 90% for 2 minutes"

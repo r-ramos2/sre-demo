@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: sre-demo
+spec:
+ replicas: {{ .Values.replicaCount }}
+ selector:
+  matchLabels:
+   app: sre-demo
+ template:
+  metadata:
+   labels:
+    app: sre-demo
+  spec:
+   containers:
+   - name: sre-demo
+     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+     imagePullPolicy: {{ .Values.image.pullPolicy }}
+     ports:
+     - containerPort: {{ .Values.service.targetPort }}
+     - containerPort: {{ .Values.service.metricsPort }}
+     livenessProbe:
+      httpGet:
+       path: /health
+       port: {{ .Values.service.targetPort }}
+      initialDelaySeconds: 5
+      periodSeconds: 10
+     readinessProbe:
+      httpGet:
+       path: /health
+       port: {{ .Values.service.targetPort }}
+      initialDelaySeconds: 3
+      periodSeconds: 5
